@@ -3,7 +3,9 @@ services:
   service.cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
-    command: tunnel --no-autoupdate run --token eyJhIjoiNjk1NWI1YWY0MGQ2ZTZlMWRiZmEwMDUxZjNkMzMyNDciLCJ0IjoiNzlmOGI4ZTQtNGJjMC00OGM3LWJhZjAtZjMxOTczOWY4OTMzIiwicyI6Ik9UVTJZakpoWVRRdFltSm1OeTAwTkRJMkxUaGlNMll0TXpGaE5HUTBaVFZqWlRFNSJ9
+    environment:
+      - TUNNEL_TOKEN=xxxxx
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
     restart: always
     networks:
       - public_access
