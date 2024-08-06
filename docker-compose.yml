@@ -1,12 +1,19 @@
 version: "3"
 services:
+  service.cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token eyJhIjoiNjk1NWI1YWY0MGQ2ZTZlMWRiZmEwMDUxZjNkMzMyNDciLCJ0IjoiNzlmOGI4ZTQtNGJjMC00OGM3LWJhZjAtZjMxOTczOWY4OTMzIiwicyI6Ik9UVTJZakpoWVRRdFltSm1OeTAwTkRJMkxUaGlNMll0TXpGaE5HUTBaVFZqWlRFNSJ9
+    restart: always
+    networks:
+      - public_access
   service.rss:
     image: wangqiru/ttrss:latest
     container_name: ttrss
     ports:
       - 181:80
     environment:
-      - SELF_URL_PATH=http://localhost:181 # please change to your own domain
+      - SELF_URL_PATH=http://rss.jingb.top:181 # please change to your own domain
       - DB_PASS=ttrss # use the same password defined in `database.postgres`
       - PUID=1000
       - PGID=1000
