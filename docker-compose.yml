@@ -9,6 +9,46 @@ services:
     restart: always
     networks:
       - public_access
+  
+  service.rsshub:
+    # two ways to enable puppeteer:
+    # * comment out marked lines, then use this image instead: diygod/rsshub:chromium-bundled
+    # * (consumes more disk space and memory) leave everything unchanged
+    image: diygod/rsshub
+    restart: always
+    ports:
+        - '1200:1200'
+    environment:
+        NODE_ENV: production
+        CACHE_TYPE: redis
+        REDIS_URL: 'redis://redis:6379/'
+        PUPPETEER_WS_ENDPOINT: 'ws://browserless:3000'  # marked
+        ACCESS_KEY: jingb
+    depends_on:
+        - service.redis
+        - service.browserless  # marked
+    networks:
+      - public_access
+      - service_only
+
+  service.browserless:  # marked
+    image: browserless/chrome  # marked
+    restart: always  # marked
+    ulimits:  # marked
+      core:  # marked
+        hard: 0  # marked
+        soft: 0  # marked
+    networks:
+      - service_only
+
+  service.redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+        - redis-data:/data
+    networks:
+      - service_only
+
   service.rss:
     image: wangqiru/ttrss:latest
     container_name: ttrss
@@ -69,6 +109,7 @@ services:
 
 volumes:
   feed-icons:
+  redis-data:
 
 networks:
   public_access: # Provide the access for ttrss UI
